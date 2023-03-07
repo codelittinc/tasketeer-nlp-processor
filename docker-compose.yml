@@ -1,0 +1,47 @@
+version: "2"
+services: 
+  mongodb:
+    image: mongo:6.0
+    restart: always
+    volumes:
+      - ~/mongo:/data/db
+    container_name: nlp-processor-mongo
+    networks:
+      - nlp-processor-network
+    ports:
+      - "27017:27017"
+    env_file:
+      - .env
+  
+  mongo-express:
+    image: mongo-express
+    container_name: nlp-processor-mongo-express
+    restart: always
+    networks:
+      - nlp-processor-network
+    depends_on: 
+      - mongodb
+    ports:
+      - 8081:8081
+    env_file:
+      - .env
+  
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nlp-processor-app
+    networks:
+      - nlp-processor-network
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on: 
+      - mongodb
+    ports:
+      - "8080:8080"
+
+networks:
+  nlp-processor-network:
+    driver: bridge
