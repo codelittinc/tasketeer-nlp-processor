@@ -1,16 +1,10 @@
-from flask import Flask, json
+from flask import Flask
+from src.controllers.file_index_controller import file_index_bp
 import os
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    response = app.response_class(
-        response=json.dumps({'success':'true'}),
-        mimetype='application/json'
-    )
-    return response
-
+app.register_blueprint(file_index_bp)
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))

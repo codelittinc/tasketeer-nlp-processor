@@ -1,0 +1,3 @@
+touch .env
+docker-compose up -d
+docker exec -it nlp-processor-app bash

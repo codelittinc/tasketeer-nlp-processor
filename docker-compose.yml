@@ -1,6 +1,6 @@
 version: "2"
 services: 
-  mongodb:
+  db:
     image: mongo:6.0
     restart: always
     volumes:
@@ -10,19 +10,6 @@ services:
       - nlp-processor-network
     ports:
       - "27017:27017"
-    env_file:
-      - .env
-  
-  mongo-express:
-    image: mongo-express
-    container_name: nlp-processor-mongo-express
-    restart: always
-    networks:
-      - nlp-processor-network
-    depends_on: 
-      - mongodb
-    ports:
-      - 8081:8081
     env_file:
       - .env
   
@@ -38,7 +25,7 @@ services:
     env_file:
       - .env
     depends_on: 
-      - mongodb
+      - db
     ports:
       - "8080:8080"
 
