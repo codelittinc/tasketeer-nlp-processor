@@ -1,4 +1,5 @@
 from src.repositories.file_indexes_repository import *
+from src.clients.openai import openai_client
 
 class UpsertFileIndexService():
     def apply(self, data):
@@ -8,6 +9,9 @@ class UpsertFileIndexService():
       repository.delete({
         "organization": data["organization"]
       })
+      
+      # generate content index using openai
+      data["content"] = openai_client.generate_string_index(data["content"])
       
       # add the most recent record (from request) to the organization
       id = repository.insert({
