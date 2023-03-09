@@ -18,6 +18,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: nlp-processor-app
+    tty: true
+    stdin_open: true
     networks:
       - nlp-processor-network
     volumes:
