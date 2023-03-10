@@ -14,9 +14,9 @@ class UpsertFileIndexService():
       data["content"] = openai_client.generate_string_index(data["content"])
       
       # add the most recent record (from request) to the organization
-      id = repository.insert({
+      response = repository.insert({
         "Document": data
       })
       
       # returns the record id from mongo
-      return str(id)
+      return response

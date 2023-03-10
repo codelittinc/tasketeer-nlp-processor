@@ -1,7 +1,6 @@
 from pymongo import MongoClient
 import os
 import datetime
-import sys
 
 class FileIndexesRepository:
     def __init__(self):
@@ -12,6 +11,8 @@ class FileIndexesRepository:
         cursor = self.client[database]
         self.collection = cursor[collection]
     
+    def get_by_organization(self, organization):
+        return self.collection.find_one({'organization': organization})
     
     def insert(self, data):
         new_document = data['Document']
