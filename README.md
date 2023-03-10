@@ -5,6 +5,15 @@
 cp .env.example .env
 ```
 
+set the production values of these env variables in `production`:
+```
+FLASK_DEBUG=0
+ENV=production
+AUTHORIZATION=
+OPENAI_API_KEY=
+MONGODB_HOST=
+```
+
 ### start the `bin/dev` script for development mode
 ```bash
 sh bin/dev
@@ -20,8 +29,24 @@ pip install -r requirements.txt
 python3 app.py
 ```
 
+### Health endpoint
+- Checker to verify if the server is running as expected
+```bash
+curl --location 'http://localhost:8080/health'
+```
+
+response:
+```json
+{
+    "datetime": "Fri, 10 Mar 2023 17:37:36 GMT",
+    "success": "true"
+}
+```
+
+
 ### Index content 
 - Store file indexes to be used by an organization to search by context
+- This endpoint expects to receive the `Authorization` header in production environment `(ENV=production)`
 ```bash
 curl --location 'http://localhost:8080/file_index' \
 --header 'Content-Type: application/json' \
@@ -41,6 +66,7 @@ response:
 
 ### Search indexed content
 - Search by context (based on **files** already uploaded or the open_ai global knowledge database)
+- This endpoint expects to receive the `Authorization` header in production environment `(ENV=production)`
 ```bash
 curl --location 'http://localhost:8080/search?organization=codelitt&q=explain%20the%20Travel%20Expense%20Report%20Process%20on%20Codelitt'
 ```
