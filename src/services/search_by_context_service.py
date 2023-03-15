@@ -11,7 +11,7 @@ class SearchByContextService():
       entity = file_index_repository.get_by_organization(data["organization"])
       
       # send question to open ai
-      response = openai_client.search(data["q"], entity['content'])
+      response = openai_client.search(data["q"], entity['content'] if entity else None)
       
       # add response to the search history collection
       search_history_repository.insert({
