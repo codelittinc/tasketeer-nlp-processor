@@ -14,6 +14,6 @@ class SearchHistoryRepository:
     def insert(self, data):
         data['created_at'] = datetime.datetime.utcnow()
         response = self.collection.insert_one(data)
-        output = {'Status': 'Successfully Inserted',
-                  'Document_ID': str(response.inserted_id)}
+        output = {'status': 'Successfully Inserted',
+                  'document_id': str(response.inserted_id)}
         return output

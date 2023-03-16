@@ -17,8 +17,7 @@ class SearchByContextService():
       search_history_repository.insert({
         'organization': data["organization"],
         'q': data["q"],
-        'gpt_answer': str(response),
-        'gpt_file_index': entity
+        'gpt_answer': str(response)
       })
       
       # returns the anwser from open ai

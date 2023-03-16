@@ -18,8 +18,8 @@ class FileIndexesRepository:
         new_document = data['Document']
         new_document['created_at'] = datetime.datetime.utcnow()
         response = self.collection.insert_one(new_document)
-        output = {'Status': 'Successfully Inserted',
-                  'Document_ID': str(response.inserted_id)}
+        output = {'status': 'Successfully Inserted',
+                  'document_id': str(response.inserted_id)}
         return output
     
     def delete(self, data):
