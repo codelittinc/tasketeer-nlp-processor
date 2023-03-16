@@ -45,10 +45,10 @@ response:
 
 
 ### Index content 
-- Store file indexes to be used by an organization to search by context
+- Store file contents to be used by an organization to search by context
 - This endpoint expects to receive the `Authorization` header in production environment `(ENV=production)`
 ```bash
-curl --location 'http://localhost:8080/file_index' \
+curl --location 'http://localhost:8080/contents' \
 --header 'Content-Type: application/json' \
 --data '{
     "organization": "codelitt",
