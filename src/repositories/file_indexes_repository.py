@@ -1,28 +1,25 @@
 from pymongo import MongoClient
 import os
-import datetime
+import gridfs
 
 class FileIndexesRepository:
     def __init__(self):
-        self.client = MongoClient(os.environ.get('MONGODB_HOST', ''))  
-      
         database = os.environ.get('MONGO_INITDB_DATABASE', '')
-        collection = 'file_indexes'
+        self.client = MongoClient(os.environ.get('MONGODB_HOST', ''))
         cursor = self.client[database]
-        self.collection = cursor[collection]
+        self.fs = gridfs.GridFS(cursor)  
     
     def get_by_organization(self, organization):
-        return self.collection.find_one({'organization': organization})
+        item = self.fs.find_one({'organization': organization})
+        return item.read().decode('utf-8') if item else None
     
     def insert(self, data):
-        new_document = data['Document']
-        new_document['created_at'] = datetime.datetime.utcnow()
-        response = self.collection.insert_one(new_document)
-        output = {'status': 'Successfully Inserted',
-                  'document_id': str(response.inserted_id)}
-        return output
+        item = data["Document"]
+        id = self.fs.put(item['content'], organization=item['organization'], encoding='utf-8')
+        return {'status': 'Successfully Inserted', 'document_id': str(id)}
     
     def delete(self, data):
-        response = self.collection.delete_one({'organization': data['organization']})
-        output = {'Status': 'Successfully Deleted' if response.deleted_count > 0 else "Document not found."}
-        return output
+        item = self.fs.find_one({'organization': data['organization']})
+        if item is None:
+            return {'status': 'Document not found.'}
+        return self.fs.delete(item._id)

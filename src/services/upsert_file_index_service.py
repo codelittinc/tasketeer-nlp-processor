@@ -10,11 +10,10 @@ class UpsertFileIndexService():
       repository = FileIndexesRepository()
       
       # check if there is any file already indexed for organization
-      file_index = repository.get_by_organization(data["organization"])
-      latest_index_str = file_index['content'] if file_index else None
+      file_index = repository.get_by_organization(data["organization"]) 
       
       # generate content index using openai
-      data["content"] = openai_client.generate_string_index(data["content"], latest_index_str)
+      data["content"] = openai_client.generate_string_index(data["content"], file_index)
       
       # delete any existing records from organization
       repository.delete({

@@ -34,7 +34,6 @@ def generate_string_index(content, gpt_latest_index_str):
   # returns the index as a string
   return index.save_to_string()
 
-
 def search(input, gpt_index_str):
   search_mode = os.environ.get('OPENAI_MODE', 'summarize')
   not_found_answer = os.environ.get('OPENAI_NOT_FOUND_RESPONSE', '')
