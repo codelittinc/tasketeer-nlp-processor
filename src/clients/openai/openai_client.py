@@ -36,7 +36,7 @@ def search(input, gpt_index_str):
   # PS: Completion API does not support the gpt-3.5-turbo model at the time of this writing 
   if gpt_index_str is None:
     completion = openai.Completion.create(model="text-davinci-003", prompt=f'{input}.{not_found_answer}')
-    return completion.choices[0].text
+    return { 'response': completion.choices[0].text }
   else:
     index = GPTTreeIndex.load_from_string(gpt_index_str)
     return index.query(f'{input}.{not_found_answer}', search_mode)
