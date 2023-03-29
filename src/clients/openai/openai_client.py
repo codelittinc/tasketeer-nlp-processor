@@ -1,5 +1,5 @@
 from llama_index import (
-    GPTTreeIndex,
+    GPTSimpleVectorIndex,
     LLMPredictor,
     StringIterableReader,
     ServiceContext,
@@ -23,13 +23,12 @@ def generate_string_index(content):
 
   # index the document 
   service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor)
-  index = GPTTreeIndex.from_documents(documents, service_context=service_context)
+  index = GPTSimpleVectorIndex.from_documents(documents, service_context=service_context)
   
   # returns the index as a string
   return index.save_to_string()
 
 async def search(input, gpt_index_str):
-  search_mode = os.environ.get('OPENAI_MODE', 'summarize')
   not_found_answer = os.environ.get('OPENAI_NOT_FOUND_RESPONSE', '')
 
   # in case there are no indexed documents, use the default openai completion api
@@ -39,5 +38,5 @@ async def search(input, gpt_index_str):
     completion = openai.Completion.create(model="text-davinci-003", prompt=f'{input}.{not_found_answer}')
     return { 'response': completion.choices[0].text }
   else:
-    index = GPTTreeIndex.load_from_string(gpt_index_str)
-    return index.query(f'{input}.{not_found_answer}', search_mode)
+    index = GPTSimpleVectorIndex.load_from_string(gpt_index_str)
+    return index.query(f'{input}.{not_found_answer}')
