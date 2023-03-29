@@ -20,5 +20,7 @@ def get(process_uuid):
     repository = OpenAiProcessRepository()
     item = repository.get_by_process_uuid(process_uuid)
     return jsonify({
+      'organization': item['organization'] if item else None,
+      'question': item['question'] if item else None,
       'response': item['response'] if item else None,
     })

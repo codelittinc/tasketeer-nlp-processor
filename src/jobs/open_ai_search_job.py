@@ -13,6 +13,7 @@ class OpenAiSearchJob():
       # update the mongodb entity with the answer
       OpenAiProcessRepository().insert({
         'process_uuid': process_uuid,
+        'question': data["q"],
         'organization': data['organization'],
         'response': gpt_result.response,
       })
