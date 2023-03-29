@@ -13,3 +13,12 @@ def index():
     return jsonify({
       'response': response,
     })
+    
+@search_bp.route('/search/<process_uuid>', methods=['GET'])
+@auth_required
+def get(process_uuid):
+    repository = OpenAiProcessRepository()
+    item = repository.get_by_process_uuid(process_uuid)
+    return jsonify({
+      'response': item['response'] if item else None,
+    })

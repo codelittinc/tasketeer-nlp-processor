@@ -7,6 +7,8 @@ class SearchByContextService():
       # generate uuid for the process
       process_uuid = str(uuid.uuid4())
       
-      # run the search job in the background, to not block the main thread
-      # asyncio.ensure_future(OpenAiSearchJob().run(data, process_uuid))
-      return await OpenAiSearchJob().run(data, process_uuid)
+      # run the job
+      await OpenAiSearchJob().run(data, process_uuid)
+      
+      # return the process uuid so the client can check the status
+      return process_uuid
