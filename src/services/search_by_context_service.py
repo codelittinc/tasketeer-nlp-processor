@@ -1,12 +1,12 @@
-from src.repositories.file_indexes_repository import *
-from src.clients.openai import openai_client
+from src.jobs.open_ai_search_job import *
+import uuid
 
 class SearchByContextService():
-    def apply(self, data):
-      file_index_repository = FileIndexesRepository()
+    async def apply(self, data):
+
+      # generate uuid for the process
+      process_uuid = str(uuid.uuid4())
       
-      # get the mongodb entity from the organization
-      entity = file_index_repository.get_by_organization(data["organization"])
-      
-      # send question to open ai and return the answer
-      return openai_client.search(data["q"], entity)
+      # run the search job in the background, to not block the main thread
+      # asyncio.ensure_future(OpenAiSearchJob().run(data, process_uuid))
+      return await OpenAiSearchJob().run(data, process_uuid)
