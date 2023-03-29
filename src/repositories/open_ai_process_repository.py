@@ -15,3 +15,6 @@ class OpenAiProcessRepository:
         data['processed_at'] = datetime.datetime.utcnow()
         response = self.collection.insert_one(data)
         return str(response.inserted_id)
+
+    def get_by_process_uuid(self, process_uuid):
+        return self.collection.find_one({'process_uuid': process_uuid})
