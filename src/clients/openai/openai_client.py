@@ -28,7 +28,7 @@ def generate_string_index(content):
   # returns the index as a string
   return index.save_to_string()
 
-async def search(input, gpt_index_str):
+def search(input, gpt_index_str):
   not_found_answer = os.environ.get('OPENAI_NOT_FOUND_RESPONSE', '')
 
   # in case there are no indexed documents, use the default openai completion api
