@@ -13,6 +13,14 @@ services:
     env_file:
       - .env
   
+  redis:
+    container_name: nlp-processor-redis
+    image: "redis:alpine"
+    networks:
+      - nlp-processor-network
+    ports:
+      - '6379:6379'
+
   app:
     build:
       context: .
@@ -28,6 +36,7 @@ services:
       - .env
     depends_on: 
       - db
+      - redis
     ports:
       - "8080:8080"
 

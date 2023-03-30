@@ -1,14 +1,23 @@
-from src.jobs.open_ai_search_job import *
+from src.events.search_requested_handler import *
+from src.configs.redis_config import *
 import uuid
+import json
 
 class SearchByContextService():
-    async def apply(self, data):
+    def __init__(self):
+      self.redisClient = redis_instance()
+    
+    def apply(self, data):
 
       # generate uuid for the process
       process_uuid = str(uuid.uuid4())
       
-      # run the job
-      await OpenAiSearchJob().run(data, process_uuid)
+      # add the search request to the queue
+      self.redisClient.publish(channel='gpt_search', message=json.dumps({
+        'process_uuid': process_uuid,
+        'organization': data['organization'],
+        'q': data['q'],
+      }))
       
       # return the process uuid so the client can check the status
       return process_uuid
