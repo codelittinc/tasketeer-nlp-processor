@@ -3,6 +3,7 @@ from src.controllers.content_controller import content_bp
 from src.controllers.search_controller import search_bp
 from src.controllers.health_controller import health_bp
 from src.events.search_requested_handler import SearchRequestedHandler
+from src.events.indexer_started_handler import IndexerStartedHandler
 import os
 import atexit
 import logging
@@ -22,6 +23,7 @@ if __name__ == "__main__":
     scheduler = BackgroundScheduler()
     scheduler.remove_all_jobs()
     scheduler.add_job(func=SearchRequestedHandler.listen, id='redis_subs', max_instances=1)
+    scheduler.add_job(func=IndexerStartedHandler.listen, id='redis_indexer', max_instances=1)
     scheduler.start()
 
     # Shut down the scheduler when exiting the app

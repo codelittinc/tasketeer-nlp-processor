@@ -14,8 +14,12 @@ class FileIndexesRepository:
         return item.read().decode('utf-8') if item else None
     
     def insert(self, data):
-        item = data["Document"]
-        id = self.fs.put(item['content'], organization=item['organization'], encoding='utf-8')
+        organization = data["organization"]
+        process_uuid = data["process_uuid"]
+        state = data["state"]
+        content = data["content"]
+        
+        id = self.fs.put(content, organization=organization, process_uuid=process_uuid, state=state, encoding='utf-8')
         return {'status': 'Successfully Inserted', 'document_id': str(id)}
     
     def delete(self, data):
