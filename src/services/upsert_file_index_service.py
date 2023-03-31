@@ -1,5 +1,6 @@
 from src.repositories.file_indexes_repository import *
 from src.configs.redis_config import *
+from src.utils.indexing_states import INDEXING_STARTED
 import uuid
 import json
 
@@ -19,14 +20,15 @@ class UpsertFileIndexService():
       
       # delete any existing records from organization
       repository.delete({
-        "organization": data["organization"]
+        "organization": data["organization"],
+        "state": INDEXING_STARTED,
       })
       
       # add the initial state of the record (from request) so it can be processed by the indexer
       repository.insert({
         "organization": data["organization"],
         "process_uuid": process_uuid,
-        "state": "started",
+        "state": INDEXING_STARTED,
         "content": data["content"]
       })
       

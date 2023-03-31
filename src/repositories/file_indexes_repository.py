@@ -9,8 +9,8 @@ class FileIndexesRepository:
         cursor = self.client[database]
         self.fs = gridfs.GridFS(cursor)  
     
-    def get_by_organization(self, organization):
-        item = self.fs.find_one({'organization': organization})
+    def get_by_organization(self, organization, state):
+        item = self.fs.find_one({'organization': organization, 'state': state })
         return item.read().decode('utf-8') if item else None
     
     def insert(self, data):
@@ -23,7 +23,7 @@ class FileIndexesRepository:
         return {'status': 'Successfully Inserted', 'document_id': str(id)}
     
     def delete(self, data):
-        item = self.fs.find_one({'organization': data['organization']})
+        item = self.fs.find_one({'organization': data['organization'], 'state': data['state']})
         if item is None:
             return {'status': 'Document not found.'}
         return self.fs.delete(item._id)

@@ -2,6 +2,7 @@ from src.clients.openai import openai_client
 from src.repositories.file_indexes_repository import *
 from src.repositories.open_ai_process_repository import *
 from src.configs.redis_config import redis_instance
+from src.utils.indexing_states import INDEXING_FINISHED
 import json
 
 class SearchRequestedHandler():
@@ -22,7 +23,7 @@ class SearchRequestedHandler():
   
     def run(self, data, process_uuid):
       # get the mongodb entity from the organization
-      entity = FileIndexesRepository().get_by_organization(data["organization"])
+      entity = FileIndexesRepository().get_by_organization(data["organization"], INDEXING_FINISHED)
 
       # send question to open ai and wait for the answer
       gpt_result = openai_client.search(data["q"], entity)
