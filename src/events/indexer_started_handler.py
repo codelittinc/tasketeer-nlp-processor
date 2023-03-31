@@ -2,6 +2,7 @@ from src.clients.openai import openai_client
 from src.repositories.file_indexes_repository import *
 from src.repositories.open_ai_process_repository import *
 from src.configs.redis_config import redis_instance
+from src.utils.indexing_states import INDEXING_FINISHED, INDEXING_STARTED
 import json
 
 class IndexerStartedHandler():
@@ -25,20 +26,21 @@ class IndexerStartedHandler():
       repository = FileIndexesRepository()
       
       # get the initial state of the record (from request) so it can be processed by the indexer
-      content = repository.get_by_organization(organization)
+      content = repository.get_by_organization(organization, INDEXING_STARTED)
       
       # generate content index using openai
       indexed_content = openai_client.generate_string_index(content)
       
       # delete any existing records from organization
       repository.delete({
-        "organization": organization
+        "organization": organization,
+        "state": INDEXING_FINISHED,
       })
       
       # add indexed content to the organization      
       repository.insert({
         "organization": organization,
         "process_uuid": process_uuid,
-        "state": "indexed",
+        "state": INDEXING_FINISHED,
         "content": indexed_content
       })

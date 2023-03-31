@@ -1,0 +1,2 @@
+INDEXING_STARTED="started"
+INDEXING_FINISHED="indexed"
