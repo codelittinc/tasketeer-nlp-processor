@@ -4,6 +4,7 @@ from src.repositories.open_ai_process_repository import *
 from src.configs.redis_config import redis_instance
 from src.utils.indexing_states import INDEXING_FINISHED
 import json
+import asyncio
 
 class SearchRequestedHandler():
   
@@ -16,24 +17,25 @@ class SearchRequestedHandler():
         for message in pubsub.listen():
             try:
                 item = json.loads(message.get('data'))
-                handler.run(item, item['process_uuid'])
-            except:
-                print("An exception occurred: ", message)
+                asyncio.run(handler.run(item, item['process_uuid']))
+            except Exception as e:
+                print("An exception occurred, payload: ", message)
+                print(e)
   
   
-    def run(self, data, process_uuid):
+    async def run(self, data, process_uuid):
       # get the mongodb entity from the organization
       entity = FileIndexesRepository().get_by_organization(data["organization"], INDEXING_FINISHED)
 
       # send question to open ai and wait for the answer
-      gpt_result = openai_client.search(data["q"], entity)
+      gpt_result = await openai_client.search(data["q"], entity)
       
       # update the mongodb entity with the answer
       OpenAiProcessRepository().insert({
         'process_uuid': process_uuid,
         'question': data["q"],
         'organization': data['organization'],
-        'response': gpt_result.response,
+        'response': gpt_result,
       })
       
-      return gpt_result.response
+      return gpt_result

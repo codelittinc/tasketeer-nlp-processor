@@ -17,8 +17,9 @@ class IndexerStartedHandler():
             try:
                 item = json.loads(message.get('data'))
                 handler.run(item['organization'], item['process_uuid'])
-            except:
-                print("An exception occurred: ", message)
+            except Exception as e:
+                print("An exception occurred, payload: ", message)
+                print(e)
   
   
     def run(self, organization, process_uuid):
