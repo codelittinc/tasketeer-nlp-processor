@@ -43,18 +43,15 @@ async def gpt3_completion(prompt, stop=['<<END>>']):
   prompt = prompt.encode(encoding='ASCII',errors='ignore').decode()
   while True:
     try:
-      response = openai.ChatCompletion.create(
-        model=os.environ.get('OPENAI_PREDICTOR_MODEL_NAME', 'gpt-3.5-turbo'),
-        messages=[
-            {"role": "system", "content": os.environ.get('OPENAI_PREDICTOR_ASSISTANT_PERSONA', '')},
-            {'role': 'user', 'content': prompt}
-        ],
-        temperature=float(os.environ.get('OPENAI_PREDICTOR_TEMPERATURE', '0.5')),
+      response = openai.Completion.create(
+        model=os.environ.get('OPENAI_PREDICTOR_MODEL_NAME', 'text-davinci-003'),
+        prompt=prompt,
+        temperature=int(os.environ.get('OPENAI_PREDICTOR_TEMPERATURE', '0.5')),
         max_tokens=int(os.environ.get('OPENAI_PREDICTOR_TOKENS', '2000')),
         top_p=float(os.environ.get('OPENAI_PREDICTOR_TOP_P', '1.0')),
         frequency_penalty=float(os.environ.get('OPENAI_PREDICTOR_FREQUENCY_PENALTY', '0.25')),
         stop=stop)
-      text = response['choices'][0]['message']['content'].strip()
+      text = response['choices'][0]['text'].strip()
       text = re.sub('\s+', ' ', text)
       return text
     except Exception as oops:
