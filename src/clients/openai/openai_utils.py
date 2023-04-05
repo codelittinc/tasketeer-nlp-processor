@@ -50,7 +50,7 @@ async def gpt3_completion(prompt, stop=['<<END>>']):
             {'role': 'user', 'content': prompt}
         ],
         temperature=float(os.environ.get('OPENAI_PREDICTOR_TEMPERATURE', '0')),
-        max_tokens=float(os.environ.get('OPENAI_PREDICTOR_TOKENS', '3000')),
+        max_tokens=int(os.environ.get('OPENAI_PREDICTOR_TOKENS', '3000')),
         top_p=float(os.environ.get('OPENAI_PREDICTOR_TOP_P', '1.0')),
         frequency_penalty=float(os.environ.get('OPENAI_PREDICTOR_FREQUENCY_PENALTY', '0.25')),
         stop=stop)
