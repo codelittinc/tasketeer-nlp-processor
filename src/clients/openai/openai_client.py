@@ -27,7 +27,7 @@ async def search(input, gpt_index_str):
 
   data = json.loads(gpt_index_str)
   results = search_index(input, data)
-  answers = list()
+  answers = []
   tasks = []
   
   # answer the same question for all returned chunks that are similar to the input
@@ -41,11 +41,13 @@ async def search(input, gpt_index_str):
   answers = await asyncio.gather(*tasks)
   
   # do not consider anwsers that are not found in the data
-  answers = [answer for answer in answers if answer != "I couldn't find this information in my data."]
+  final_answers = [answer for answer in answers if answer != None]
+  
+  if len(final_answers) == 0:
+    final_answers.append("I Couldn't find an answer to your question.")
         
   # summarize the answers together
-  all_answers = '\n\n'.join(answers)
-  chunks = textwrap.wrap(all_answers, 10000)
+  chunks = textwrap.wrap('\n\n'.join(final_answers), 10000)
   final = list()
   for chunk in chunks:
     prompt = PROMPT_SUMMARY.replace('<<SUMMARY>>', chunk)

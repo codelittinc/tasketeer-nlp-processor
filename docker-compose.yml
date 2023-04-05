@@ -16,10 +16,13 @@ services:
   redis:
     container_name: nlp-processor-redis
     image: "redis:alpine"
+    command: --port 6380
+    expose:
+      - 6380
     networks:
       - nlp-processor-network
     ports:
-      - '6379:6379'
+      - '6380:6380'
 
   app:
     build:
