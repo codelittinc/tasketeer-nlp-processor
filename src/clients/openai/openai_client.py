@@ -3,6 +3,7 @@ import openai
 import json
 import textwrap
 import asyncio
+import gc
 from src.clients.openai.openai_prompt_messages import PROMPT_ANSWER, PROMPT_SUMMARY
 from src.clients.openai.openai_utils import gpt3_embedding, search_index, gpt3_completion
 
@@ -17,6 +18,10 @@ def generate_string_index(content):
     embedding = gpt3_embedding(chunk.encode(encoding='ASCII',errors='ignore').decode())
     info = {'content': chunk, 'vector': embedding}
     result.append(info)
+  
+  del chunks
+  del content
+  gc.collect()
   
   # returns the index as a string
   print("Indexing completed. Returning index as string.")
@@ -45,7 +50,11 @@ async def search(input, gpt_index_str):
   
   if len(final_answers) == 0:
     final_answers.append("I Couldn't find an answer to your question.")
-        
+  
+  del gpt_index_str
+  del data
+  gc.collect()
+      
   # summarize the answers together
   chunks = textwrap.wrap('\n\n'.join(final_answers), 10000)
   final = list()
