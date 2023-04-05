@@ -30,7 +30,7 @@ if __name__ == "__main__":
     atexit.register(lambda: scheduler.shutdown())
 
     # set logging level to display logs from apscheduler
-    logging.basicConfig()
+    logging.basicConfig(level=logging.DEBUG)
     logging.getLogger('apscheduler').setLevel(logging.DEBUG)
     
     # run flask app
