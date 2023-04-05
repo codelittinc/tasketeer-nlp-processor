@@ -1,11 +1,11 @@
 PROMPT_ANSWER="""
-Use my data to give a concise answer to the question:
+Given the CONTEXT, give a concise answer to the question:
 If you don't know the answer, RETURN "I Couldn't find this information in my data." 
 
+CONTEXT: <<PASSAGE>>
+
+
 QUESTION: <<QUERY>>
-
-
-MY DATA: <<PASSAGE>>
 
 
 CONCISE ANSWER:
