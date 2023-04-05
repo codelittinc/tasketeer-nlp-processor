@@ -4,6 +4,7 @@ from src.repositories.open_ai_process_repository import *
 from src.configs.redis_config import redis_instance
 from src.utils.indexing_states import INDEXING_FINISHED, INDEXING_STARTED
 import json
+import gc
 
 class IndexerStartedHandler():
   
@@ -45,3 +46,6 @@ class IndexerStartedHandler():
         "state": INDEXING_FINISHED,
         "content": indexed_content
       })
+      
+      del indexed_content
+      gc.collect()

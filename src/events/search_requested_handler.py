@@ -5,6 +5,7 @@ from src.configs.redis_config import redis_instance
 from src.utils.indexing_states import INDEXING_FINISHED
 import json
 import asyncio
+import gc
 
 class SearchRequestedHandler():
   
@@ -37,5 +38,8 @@ class SearchRequestedHandler():
         'organization': data['organization'],
         'response': gpt_result,
       })
+      
+      del entity
+      gc.collect()
       
       return gpt_result
