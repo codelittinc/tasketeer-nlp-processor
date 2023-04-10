@@ -1,6 +1,7 @@
 from src.clients.openai import openai_client
 from src.repositories.file_indexes_repository import *
 from src.repositories.open_ai_process_repository import *
+from src.repositories.file_indexer_status_repository import *
 from src.configs.redis_config import redis_instance
 from src.utils.indexing_states import INDEXING_FINISHED, INDEXING_STARTED
 import json
@@ -26,6 +27,7 @@ class IndexerStartedHandler():
     def run(self, organization, process_uuid):
       # initialize mongodb repository
       repository = FileIndexesRepository()
+      statusRepository = FileIndexerStatusRepository()
       
       # get the initial state of the record (from request) so it can be processed by the indexer
       content = repository.get_by_organization(organization, INDEXING_STARTED)
@@ -45,6 +47,11 @@ class IndexerStartedHandler():
         "process_uuid": process_uuid,
         "state": INDEXING_FINISHED,
         "content": indexed_content
+      })
+      
+      statusRepository.insert({
+        "organization": organization,
+        "process_uuid": process_uuid,
       })
       
       del indexed_content
