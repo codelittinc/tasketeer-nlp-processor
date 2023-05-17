@@ -13,10 +13,10 @@ CONCISE ANSWER:
 """
 
 PROMPT_SUMMARY="""
-Write an informal and creative detailed summary of the following:
+Write a friendly concise and detailed summary of the following:
 
 <<SUMMARY>>
 
-INFORMAL AND CREATIVE DETAILED SUMMARY:
+FRIENDLY CONCISE AND DETAILED SUMMARY:
 
 """
