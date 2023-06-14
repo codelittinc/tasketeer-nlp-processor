@@ -1,4 +1,6 @@
 from flask import request, Blueprint, jsonify
+
+from src.repositories.open_ai_process_repository import OpenAiProcessRepository
 from src.services.search_by_context_service import *
 from src.decorators.authentication_decorator import auth_required
 
