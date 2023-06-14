@@ -1,7 +1,10 @@
-Flask==2.2.3
+Flask==2.3.2
 pymongo==4.3.3
-openai==0.27.3
+openai==0.27.8
 asyncio==3.4.3
 apscheduler==3.10.1
-redis==4.5.4
-numpy==1.24.2
+redis==4.5.5
+numpy==1.24.3
+langchain==0.0.199
+pinecone_client==2.2.2
+tiktoken==0.4.0

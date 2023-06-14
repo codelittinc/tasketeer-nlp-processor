@@ -2,7 +2,7 @@ import openai
 import os
 import re
 from time import sleep
-from openai.datalib import numpy as np
+import numpy as np
 
 # define a function to calculate the cosine similarity between two vectors
 def cosine_similarity(a, b):
