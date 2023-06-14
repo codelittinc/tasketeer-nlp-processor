@@ -31,13 +31,13 @@ class UpsertFileIndexService():
         "state": INDEXING_STARTED,
         "content": data["content"]
       })
-      
+
       # add the search request to the queue
       self.redisClient.publish(channel='gpt_indexer', message=json.dumps({
         'process_uuid': process_uuid,
         'organization': data['organization']
       }))
-      
+
       # return the process uuid so the client can check the status
       return {'status': 'Successfully Inserted', 'document_id': process_uuid }
     
