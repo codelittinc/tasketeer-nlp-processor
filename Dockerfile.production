@@ -1,11 +1,5 @@
 # Start from python:3.8-alpine base image
-FROM python:3.10-alpine
-
-# The latest alpine images don't have some tools like (`git` and `bash`).
-# Adding git, bash and openssh to the image
-RUN apk update && apk upgrade && \
-    apk add --no-cache libressl-dev openssl curl bash git openssh && \
-    apk add make automake gcc g++ subversion python3-dev
+FROM python:3.10-slim
 
 RUN pip3 install --upgrade pip
 
