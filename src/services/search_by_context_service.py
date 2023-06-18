@@ -15,6 +15,7 @@ class SearchByContextService():
         self.redisClient.publish(channel='gpt_search', message=json.dumps({
             'process_uuid': process_uuid,
             'organization': data['organization'],
+            'chat_id': data['chat_id'] if 'chat_id' in data else None,
             'q': data['q'],
         }))
 

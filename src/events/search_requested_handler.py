@@ -6,6 +6,7 @@ from src.utils.indexing_states import INDEXING_FINISHED
 import json
 import asyncio
 import gc
+import datetime
 from src.utils.processors import LANGCHAIN
 
 
@@ -26,8 +27,13 @@ class SearchRequestedHandler():
                 print(e)
 
     async def run(self, data, process_uuid):
+        repository = OpenAiProcessRepository()
+        
         if os.environ.get('PROCESSOR', '') == LANGCHAIN:
-            gpt_result = langchain_processor.search(data["q"], data["organization"])
+            # if chat_id is present, get the chat history to use as context
+            history = repository.get_chat_history(data['chat_id']) if 'chat_id' in data else None            
+            gpt_result = langchain_processor.search(data["q"], data["organization"], history)
+            del history
         else:
             # get the mongodb entity from the organization
             entity = FileIndexesRepository().get_by_organization(data["organization"], INDEXING_FINISHED)
@@ -37,11 +43,13 @@ class SearchRequestedHandler():
             del entity
 
         # update the mongodb entity with the answer
-        OpenAiProcessRepository().insert({
+        repository.insert({
             'process_uuid': process_uuid,
+            'chat_id': data['chat_id'],
             'question': data["q"],
             'organization': data['organization'],
             'response': gpt_result,
+            'created_at': datetime.datetime.utcnow(),
         })
 
         gc.collect()
