@@ -18,3 +18,14 @@ class OpenAiProcessRepository:
 
     def get_by_process_uuid(self, process_uuid):
         return self.collection.find_one({'process_uuid': process_uuid})
+
+    def get_chat_history(self, chat_id):
+        return self.collection.find({
+            'chat_id': chat_id,
+            'response': {
+                '$not': {
+                    '$regex': r'^I Couldn\'t find this information in my data\.$',
+                    '$options': 'i'
+                }
+            }
+        }, {'question': 1, 'response': 1})
