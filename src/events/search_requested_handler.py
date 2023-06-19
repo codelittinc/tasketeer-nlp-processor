@@ -30,8 +30,13 @@ class SearchRequestedHandler():
         repository = OpenAiProcessRepository()
         
         if os.environ.get('PROCESSOR', '') == LANGCHAIN:
+            history = None
+            
             # if chat_id is present, get the chat history to use as context
-            history = repository.get_chat_history(data['chat_id']) if 'chat_id' in data else None            
+            if 'chat_id' in data:
+                limit = int(os.environ.get('LANGCHAIN_HISTORY_LENGTH', '3'))
+                history = repository.get_chat_history(data['chat_id'], limit)
+                          
             gpt_result = langchain_processor.search(data["q"], data["organization"], history)
             del history
         else:

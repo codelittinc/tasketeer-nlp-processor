@@ -19,8 +19,8 @@ class OpenAiProcessRepository:
     def get_by_process_uuid(self, process_uuid):
         return self.collection.find_one({'process_uuid': process_uuid})
 
-    def get_chat_history(self, chat_id):
-        return self.collection.find({
+    def get_chat_history(self, chat_id, limit):
+        history = self.collection.find({
             'chat_id': chat_id,
             'response': {
                 '$not': {
@@ -28,4 +28,9 @@ class OpenAiProcessRepository:
                     '$options': 'i'
                 }
             }
-        }, {'question': 1, 'response': 1})
+        }, {
+            'question': 1, 
+            'response': 1,
+            'created_at': 1,
+        }).sort('created_at', -1).limit(limit)
+        return list(history)

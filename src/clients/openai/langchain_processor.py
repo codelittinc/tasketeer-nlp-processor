@@ -61,7 +61,7 @@ def search(req_input, organization, history=None):
         memory_key="chat_history",
         input_key="question", 
     )
-    for message in history:
+    for message in reversed(history):
         memory.chat_memory.add_user_message(message['question'])
         memory.chat_memory.add_ai_message(message['response'])
 
