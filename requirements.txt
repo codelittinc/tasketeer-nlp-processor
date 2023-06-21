@@ -8,3 +8,5 @@ numpy==1.24.3
 langchain==0.0.199
 pinecone_client==2.2.2
 tiktoken==0.4.0
+cryptography==41.0.1
+contextlib2==21.6.0

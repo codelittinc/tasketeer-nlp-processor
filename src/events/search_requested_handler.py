@@ -8,6 +8,7 @@ import asyncio
 import gc
 import datetime
 from src.utils.processors import LANGCHAIN
+from src.repositories.api_key_repository import ApiKeyRepository
 
 
 class SearchRequestedHandler():
@@ -28,6 +29,9 @@ class SearchRequestedHandler():
 
     async def run(self, data, process_uuid):
         repository = OpenAiProcessRepository()
+
+        apiKeyRepository = ApiKeyRepository()
+        openai_api_key = apiKeyRepository.get_by_organization_id(data["organization"])['api_key']
         
         if os.environ.get('PROCESSOR', '') == LANGCHAIN:
             history = None
@@ -37,14 +41,14 @@ class SearchRequestedHandler():
                 limit = int(os.environ.get('LANGCHAIN_HISTORY_LENGTH', '3'))
                 history = repository.get_chat_history(data['chat_id'], limit)
                           
-            gpt_result = langchain_processor.search(data["q"], data["organization"], history)
+            gpt_result = langchain_processor.search(data["q"], data["organization"], openai_api_key, history)
             del history
         else:
             # get the mongodb entity from the organization
             entity = FileIndexesRepository().get_by_organization(data["organization"], INDEXING_FINISHED)
 
             # send question to open ai and wait for the answer
-            gpt_result = await openai_client.search(data["q"], entity)
+            gpt_result = await openai_client.search(data["q"], entity, openai_api_key)
             del entity
 
         # update the mongodb entity with the answer

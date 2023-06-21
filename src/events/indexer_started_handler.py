@@ -7,6 +7,7 @@ from src.repositories.file_indexer_status_repository import *
 from src.configs.redis_config import redis_instance
 from src.utils.indexing_states import INDEXING_FINISHED, INDEXING_STARTED
 from src.utils.processors import LANGCHAIN
+from src.repositories.api_key_repository import ApiKeyRepository
 
 
 class IndexerStartedHandler():
@@ -30,16 +31,19 @@ class IndexerStartedHandler():
       # initialize mongodb repository
       repository = FileIndexesRepository()
       statusRepository = FileIndexerStatusRepository()
+
+      apiKeyRepository = ApiKeyRepository()
+      openai_api_key = apiKeyRepository.get_by_organization_id(organization)['api_key']
       
       # get the initial state of the record (from request) so it can be processed by the indexer
       content = repository.get_by_organization(organization, INDEXING_STARTED)
       
       # generate content index using openai
       if os.environ.get('PROCESSOR', '') == LANGCHAIN:
-          langchain_processor.generate_string_index(content, organization)
+          langchain_processor.generate_string_index(content, openai_api_key)
           indexed_content = ''
       else:
-          indexed_content = openai_client.generate_string_index(content)
+          indexed_content = openai_client.generate_string_index(content, openai_api_key)
 
       # delete any existing records from organization
       repository.delete({

@@ -2,6 +2,7 @@ from flask import Flask
 from src.controllers.content_controller import content_bp
 from src.controllers.search_controller import search_bp
 from src.controllers.health_controller import health_bp
+from src.controllers.api_key_controller import api_key_bp
 from src.events.search_requested_handler import SearchRequestedHandler
 from src.events.indexer_started_handler import IndexerStartedHandler
 import os
@@ -16,6 +17,7 @@ app = Flask(__name__)
 app.register_blueprint(content_bp)
 app.register_blueprint(search_bp)
 app.register_blueprint(health_bp)
+app.register_blueprint(api_key_bp)
 
 # start server
 if __name__ == "__main__":
