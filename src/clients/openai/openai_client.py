@@ -7,8 +7,8 @@ import gc
 from src.clients.openai.openai_prompt_messages import PROMPT_ANSWER, PROMPT_SUMMARY
 from src.clients.openai.openai_utils import gpt3_embedding, search_index, gpt3_completion
 
-def generate_string_index(content):
-  openai.api_key = os.environ.get('OPENAI_API_KEY', '')
+def generate_string_index(content, openai_api_key):
+  openai.api_key = openai_api_key
   chunck_size = int(os.environ.get('OPENAI_INDEXER_CHUNK_SIZE', '3000'))
 
   chunks = textwrap.wrap(content, chunck_size)
@@ -27,8 +27,8 @@ def generate_string_index(content):
   print("Indexing completed. Returning index as string.")
   return json.dumps(result)
 
-async def search(input, gpt_index_str):
-  openai.api_key = os.environ.get('OPENAI_API_KEY', '')
+async def search(input, gpt_index_str, openai_api_key):
+  openai.api_key = openai_api_key
 
   data = json.loads(gpt_index_str)
   results = search_index(input, data)

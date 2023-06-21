@@ -11,9 +11,6 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.memory import ConversationBufferMemory
 from src.clients.openai.openai_prompt_messages import LANGCHAIN_TEMPLATE
 
-embeddings = OpenAIEmbeddings()
-openai.api_key = os.environ.get('OPENAI_API_KEY', '')
-
 
 def init_pinecone():
     pinecone.init(
@@ -35,9 +32,12 @@ def generate_string_index(content, organization):
     return True
 
 
-def search(req_input, organization, history=None):
+def search(req_input, organization, openai_api_key, history=None):
     init_pinecone()
-    openai.api_key = os.environ.get('OPENAI_API_KEY', '')
+    openai.api_key = openai_api_key
+
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+
     chain = Pinecone.from_existing_index(
         os.environ.get('PINECONE_INDEX'), embeddings,
         namespace=f"organization-{organization}"
