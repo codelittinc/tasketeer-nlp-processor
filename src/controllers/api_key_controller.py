@@ -2,7 +2,7 @@ from flask import request, Blueprint, jsonify
 from bson import ObjectId
 
 from src.decorators.authentication_decorator import auth_required
-from repositories.api_key_repository import ApiKeyRepository
+from src.repositories.api_key_repository import ApiKeyRepository
 
 api_key_bp = Blueprint('api_key_bp', __name__)
 
