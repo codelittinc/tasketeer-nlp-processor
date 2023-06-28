@@ -10,3 +10,7 @@ pinecone_client==2.2.2
 tiktoken==0.4.0
 cryptography==41.0.1
 contextlib2==21.6.0
+google-api-python-client==2.90.0
+google-auth-httplib2==0.1.0
+google-auth-oauthlib==1.0.0
+PyPDF2==3.0.1

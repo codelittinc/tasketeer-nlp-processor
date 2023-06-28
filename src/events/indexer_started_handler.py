@@ -21,13 +21,18 @@ class IndexerStartedHandler():
         for message in pubsub.listen():
             try:
                 item = json.loads(message.get('data'))
-                handler.run(item['organization'], item['process_uuid'])
+                handler.run(
+                  item['organization'], 
+                  item['process_uuid'], 
+                  item['google_drive_id'],
+                  item['google_token'],
+                )
             except Exception as e:
                 print("An exception occurred, payload: ", message)
                 print(e)
   
   
-    def run(self, organization, process_uuid):
+    def run(self, organization, process_uuid, google_drive_id, google_token):
       # initialize mongodb repository
       repository = FileIndexesRepository()
       statusRepository = FileIndexerStatusRepository()
@@ -40,7 +45,7 @@ class IndexerStartedHandler():
       
       # generate content index using openai
       if os.environ.get('PROCESSOR', '') == LANGCHAIN:
-          langchain_processor.generate_string_index(content, openai_api_key)
+          langchain_processor.generate_string_index(content, organization, google_drive_id, google_token, openai_api_key)
           indexed_content = ''
       else:
           indexed_content = openai_client.generate_string_index(content, openai_api_key)
@@ -56,6 +61,7 @@ class IndexerStartedHandler():
         "organization": organization,
         "process_uuid": process_uuid,
         "state": INDEXING_FINISHED,
+        "google_drive_id": google_drive_id,
         "content": indexed_content
       })
 

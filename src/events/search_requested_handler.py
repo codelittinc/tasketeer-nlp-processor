@@ -37,7 +37,7 @@ class SearchRequestedHandler():
             history = None
             
             # if chat_id is present, get the chat history to use as context
-            if 'chat_id' in data:
+            if 'chat_id' in data and data['chat_id'] is not None:
                 limit = int(os.environ.get('LANGCHAIN_HISTORY_LENGTH', '3'))
                 history = repository.get_chat_history(data['chat_id'], limit)
                           
