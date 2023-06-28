@@ -35,7 +35,9 @@ class UpsertFileIndexService():
       # add the search request to the queue
       self.redisClient.publish(channel='gpt_indexer', message=json.dumps({
         'process_uuid': process_uuid,
-        'organization': data['organization']
+        'organization': data['organization'],
+        'google_drive_id': data['google_drive_id'] if 'google_drive_id' in data else None,
+        'google_token': data['google_token']  if 'google_token' in data else None,
       }))
 
       # return the process uuid so the client can check the status
@@ -44,5 +46,5 @@ class UpsertFileIndexService():
     def _validate(self, data):      
       if not data["organization"]:
         raise Exception("Organization is required")
-      if not data["content"]:
+      if not data["content"] and not data["google_drive_id"]:
         raise Exception("Content is required")
