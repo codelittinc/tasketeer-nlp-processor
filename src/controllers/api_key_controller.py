@@ -1,6 +1,4 @@
 from flask import request, Blueprint, jsonify
-from bson import ObjectId
-
 from src.decorators.authentication_decorator import auth_required
 from src.repositories.api_key_repository import ApiKeyRepository
 
