@@ -5,7 +5,7 @@ asyncio==3.4.3
 apscheduler==3.10.1
 redis==4.5.5
 numpy==1.24.3
-langchain==0.0.199
+langchain==0.0.222
 pinecone_client==2.2.2
 tiktoken==0.4.0
 cryptography==41.0.1
