@@ -26,14 +26,14 @@ class ApiKeyRepository:
         encrypted_api_key = self.cipher_suite.encrypt(api_key.encode())
         with self.get_collection() as collection:
             response = collection.insert_one({
-                'organization_id': organization_id,
+                'organization_id': str(organization_id),
                 'api_key': encrypted_api_key.decode()
             })
         return str(response.inserted_id)
 
     def get_by_organization_id(self, organization_id):
         with self.get_collection() as collection:
-            item = collection.find_one({'organization_id': organization_id})
+            item = collection.find_one({'organization_id': str(organization_id)})
 
             if item:
                 if 'api_key' in item:
@@ -44,7 +44,7 @@ class ApiKeyRepository:
         
     def delete_by_organization_id(self, organization_id):
         with self.get_collection() as collection:
-            result = collection.delete_one({'organization_id': organization_id})
+            result = collection.delete_one({'organization_id': str(organization_id)})
             return result.deleted_count
 
     def encrypt_and_store_key(self, request_data):
@@ -53,13 +53,13 @@ class ApiKeyRepository:
         encrypted_api_key = self.cipher_suite.encrypt(api_key.encode())
 
         with self.get_collection() as collection:   
-            existing_key = collection.find_one({'organization_id': organization_id})
+            existing_key = collection.find_one({'organization_id': str(organization_id)})
             if existing_key:
                 collection.update_one({'_id': existing_key['_id']}, {'$set': {'api_key': encrypted_api_key.decode()}})
                 return {'status': 'API key updated successfully'}
             else:
                 collection.insert_one({
-                    'organization_id': organization_id,
+                    'organization_id': str(organization_id),
                     'api_key': encrypted_api_key.decode()
                 })
                 return {'status': 'API key stored successfully'}
